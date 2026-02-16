@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>知恵袋 β</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>投稿フォーム</h2>
+<div class="form-box">
+  <input id="title" placeholder="タイトル（省略可）">
+  <input id="name" placeholder="ハンドルネーム（省略可）">
+  <textarea id="comment" placeholder="コメント（必須）"></textarea>
+  <button onclick="submitPost()">投稿</button>
+  <p id="status"></p>
+</div>
+
+<h2>投稿一覧</h2>
+<div id="bbs"></div>
+
+<script src="main.js"></script>
+</body>
+</html>
