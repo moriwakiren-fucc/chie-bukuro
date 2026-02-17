@@ -1,5 +1,6 @@
 const GAS_URL = "https://script.google.com/macros/s/AKfycbygMWL_WIhglJ_PnzNYVq0_NIeYOw9FJEmaMojroWWjkc7EqmVtmmVYUK0pTvZHU76w/exec";
 
+/* 投稿読み込み */
 async function loadPosts() {
   const bbs = document.getElementById("bbs");
   const loading = document.getElementById("loading");
@@ -8,12 +9,12 @@ async function loadPosts() {
     const res = await fetch(GAS_URL);
     const json = await res.json();
 
+    bbs.innerHTML = "";
+
     if (!json.data || json.data.length === 0) {
       bbs.textContent = "まだ投稿がありません";
       return;
     }
-
-    bbs.innerHTML = "";
 
     json.data.forEach(row => {
       const div = document.createElement("div");
@@ -37,11 +38,54 @@ async function loadPosts() {
     bbs.textContent = "表示エラーが発生しました";
     console.error(e);
   } finally {
-    // ★ 読み込み完了後にローディングを消す
     loading.style.display = "none";
   }
 }
 
+/* ★ 投稿処理（新規追加） */
+async function submitPost() {
+  const title = document.getElementById("title").value;
+  const name = document.getElementById("name").value;
+  const comment = document.getElementById("comment").value;
+  const status = document.getElementById("status");
+
+  if (!comment.trim()) {
+    status.textContent = "コメントは必須です";
+    return;
+  }
+
+  status.textContent = "送信中…";
+
+  try {
+    const res = await fetch(GAS_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        title,
+        name,
+        comment
+      })
+    });
+
+    const result = await res.json();
+
+    if (result.result === "ok") {
+      status.textContent = "投稿完了！";
+      document.getElementById("comment").value = "";
+      loadPosts();
+    } else {
+      status.textContent = "投稿失敗";
+    }
+
+  } catch (e) {
+    console.error(e);
+    status.textContent = "通信エラー";
+  }
+}
+
+/* HTMLエスケープ */
 function escapeHtml(str) {
   return String(str ?? "")
     .replace(/&/g, "&amp;")
