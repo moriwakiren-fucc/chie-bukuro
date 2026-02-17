@@ -1,13 +1,24 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>掲示板</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>知恵袋β</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- ローディング表示 -->
+<h2>知恵袋β</h2>
+
+<!-- 投稿フォーム -->
+<div class="box">
+  <input id="title" placeholder="タイトル（省略可）">
+  <input id="name" placeholder="ハンドルネーム（省略可）">
+  <textarea id="comment" rows="4" placeholder="コメント（必須）"></textarea>
+  <button onclick="submitPost()">投稿</button>
+  <p id="status"></p>
+</div>
+
+<!-- ローディング表示 -->
   <div id="loading">
     <div class="spinner"></div>
     <p>Loading...</p>
