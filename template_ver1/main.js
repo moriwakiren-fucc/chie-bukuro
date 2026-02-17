@@ -49,11 +49,6 @@ async function submitPost() {
   const comment = document.getElementById("comment").value;
   const status = document.getElementById("status");
 
-  if (!comment.trim()) {
-    status.textContent = "コメントは必須です";
-    return;
-  }
-
   status.textContent = "送信中…";
 
   try {
@@ -62,26 +57,26 @@ async function submitPost() {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        title,
-        name,
-        comment
-      })
+      body: JSON.stringify({ title, name, comment })
     });
 
-    const result = await res.json();
+    // ★ ここ重要
+    const text = await res.text();
+    console.log("GAS raw response:", text);
+
+    const result = JSON.parse(text);
 
     if (result.result === "ok") {
       status.textContent = "投稿完了！";
       document.getElementById("comment").value = "";
       loadPosts();
     } else {
-      status.textContent = "投稿失敗";
+      status.textContent = "投稿失敗：" + result.message;
     }
 
   } catch (e) {
-    console.error(e);
-    status.textContent = "通信エラー";
+    console.error("通信エラー詳細:", e);
+    status.textContent = "通信エラー（Consoleを確認）";
   }
 }
 
