@@ -4,22 +4,22 @@ body {
   padding: 10px;
 }
 
-.form-box {
+.box, .post {
   background: #fff;
   padding: 10px;
+  margin-bottom: 10px;
   border-radius: 6px;
-  margin-bottom: 20px;
 }
 
-input, textarea {
-  width: 100%;
-  margin-bottom: 8px;
-  padding: 6px;
+.title {
+  font-weight: bold;
+}
+
+.name {
+  color: #555;
 }
 
 .comment {
   background: lightyellow;
-  padding: 10px;
-  border-radius: 4px;
-  margin-bottom: 10px;
+  padding: 5px;
 }
