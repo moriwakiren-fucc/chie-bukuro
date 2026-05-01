@@ -3,87 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3分割 翻訳・辞書検索</title>
+    <title>一括検索ツール</title>
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
             display: flex;
             flex-direction: column;
-            font-family: sans-serif;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
         }
-        /* 入力エリアのスタイル */
-        .search-container {
-            padding: 10px;
-            background: #f4f4f4;
-            display: flex;
-            gap: 10px;
-            border-bottom: 1px solid #ccc;
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
         }
+        h1 { font-size: 1.5rem; color: #333; margin-bottom: 1.5rem; }
         input[type="text"] {
-            flex-grow: 1;
-            padding: 8px;
+            width: 100%;
+            padding: 12px;
             font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            margin-bottom: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
         }
+        input[type="text"]:focus { border-color: #007bff; }
         button {
-            padding: 8px 20px;
-            cursor: pointer;
+            width: 100%;
+            padding: 12px;
             background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
         }
-        button:hover {
-            background-color: #0056b3;
-        }
-        /* iframeを3分割にするスタイル */
-        .iframe-container {
-            display: flex;
-            flex-grow: 1;
-            width: 100%;
-        }
-        iframe {
-            width: 33.33%;
-            height: 100%;
-            border: none;
-            border-right: 1px solid #ccc;
-        }
-        iframe:last-child {
-            border-right: none;
+        button:hover { background-color: #0056b3; }
+        .note {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #666;
         }
     </style>
 </head>
 <body>
 
-<div class="search-container">
-    <input type="text" id="keyword" placeholder="検索ワードを入力してEnter" onkeypress="if(event.key === 'Enter') multiSearch()">
-    <button onclick="multiSearch()">検索</button>
-</div>
-
-<div class="iframe-container">
-    <iframe id="weblio" src="about:blank"></iframe>
-    <iframe id="alc" src="about:blank"></iframe>
-    <iframe id="deepl" src="about:blank"></iframe>
+<div class="container">
+    <h1>一括辞書検索</h1>
+    <input type="text" id="keyword" placeholder="検索ワードを入力..." onkeypress="if(event.key === 'Enter') multiOpen()">
+    <button onclick="multiOpen()">3つのサイトを開く</button>
+    <div class="note">※初回実行時にブラウザの「ポップアップブロック」の解除が必要です</div>
 </div>
 
 <script>
-    function multiSearch() {
+    function multiOpen() {
         const input = document.getElementById('keyword').value;
         if (!input) return;
 
-        // URLエンコード処理
+        // URLエンコード
         const encoded = encodeURIComponent(input);
 
-        // 各URLの構築
-        const weblioUrl = `https://ejje.weblio.jp/content/${encoded}`;
-        const alcUrl = `https://eow.alc.co.jp/search?q=${encoded}`;
-        const deeplUrl = `https://www.deepl.com/ja/translator#ja/en/${encoded}`;
+        // 各URLの作成
+        const urls = [
+            `https://ejje.weblio.jp/content/${encoded}`,
+            `https://eow.alc.co.jp/search?q=${encoded}`,
+            `https://www.deepl.com/ja/translator#ja/en/${encoded}`
+        ];
 
-        // iframeに反映
-        document.getElementById('weblio').src = weblioUrl;
-        document.getElementById('alc').src = alcUrl;
-        document.getElementById('deepl').src = deeplUrl;
+        // 各URLを新しいタブで開く
+        urls.forEach(url => {
+            window.open(url, '_blank');
+        });
     }
 </script>
 
