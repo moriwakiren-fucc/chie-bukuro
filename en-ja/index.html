@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3分割 翻訳・辞書検索</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            font-family: sans-serif;
+        }
+        /* 入力エリアのスタイル */
+        .search-container {
+            padding: 10px;
+            background: #f4f4f4;
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 8px;
+            font-size: 16px;
+        }
+        button {
+            padding: 8px 20px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        /* iframeを3分割にするスタイル */
+        .iframe-container {
+            display: flex;
+            flex-grow: 1;
+            width: 100%;
+        }
+        iframe {
+            width: 33.33%;
+            height: 100%;
+            border: none;
+            border-right: 1px solid #ccc;
+        }
+        iframe:last-child {
+            border-right: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="search-container">
+    <input type="text" id="keyword" placeholder="検索ワードを入力してEnter" onkeypress="if(event.key === 'Enter') multiSearch()">
+    <button onclick="multiSearch()">検索</button>
+</div>
+
+<div class="iframe-container">
+    <iframe id="weblio" src="about:blank"></iframe>
+    <iframe id="alc" src="about:blank"></iframe>
+    <iframe id="deepl" src="about:blank"></iframe>
+</div>
+
+<script>
+    function multiSearch() {
+        const input = document.getElementById('keyword').value;
+        if (!input) return;
+
+        // URLエンコード処理
+        const encoded = encodeURIComponent(input);
+
+        // 各URLの構築
+        const weblioUrl = `https://ejje.weblio.jp/content/${encoded}`;
+        const alcUrl = `https://eow.alc.co.jp/search?q=${encoded}`;
+        const deeplUrl = `https://www.deepl.com/ja/translator#ja/en/${encoded}`;
+
+        // iframeに反映
+        document.getElementById('weblio').src = weblioUrl;
+        document.getElementById('alc').src = alcUrl;
+        document.getElementById('deepl').src = deeplUrl;
+    }
+</script>
+
+</body>
+</html>
