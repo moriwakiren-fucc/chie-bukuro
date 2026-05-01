@@ -2,88 +2,89 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>一括検索ツール</title>
+    <title>3画面同時ポップアップ検索</title>
     <style>
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
+            background-color: #e9ecef;
             margin: 0;
-            background-color: #f0f2f5;
         }
-        .container {
+        .card {
             background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 400px;
             text-align: center;
-            width: 90%;
-            max-width: 500px;
         }
-        h1 { font-size: 1.5rem; color: #333; margin-bottom: 1.5rem; }
         input[type="text"] {
             width: 100%;
             padding: 12px;
-            font-size: 16px;
+            margin-bottom: 20px;
             border: 2px solid #ddd;
             border-radius: 8px;
+            font-size: 16px;
             box-sizing: border-box;
-            margin-bottom: 1rem;
-            outline: none;
-            transition: border-color 0.3s;
         }
-        input[type="text"]:focus { border-color: #007bff; }
         button {
             width: 100%;
             padding: 12px;
-            background-color: #007bff;
+            background-color: #28a745;
             color: white;
             border: none;
             border-radius: 8px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.3s;
         }
-        button:hover { background-color: #0056b3; }
-        .note {
-            margin-top: 1rem;
-            font-size: 0.8rem;
-            color: #666;
-        }
+        button:hover { background-color: #218838; }
+        p { font-size: 12px; color: #666; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>一括辞書検索</h1>
-    <input type="text" id="keyword" placeholder="検索ワードを入力..." onkeypress="if(event.key === 'Enter') multiOpen()">
-    <button onclick="multiOpen()">3つのサイトを開く</button>
-    <div class="note">※初回実行時にブラウザの「ポップアップブロック」の解除が必要です</div>
+<div class="card">
+    <h2>一括ポップアップ検索</h2>
+    <input type="text" id="word" placeholder="検索したい単語を入力" onkeypress="if(event.key === 'Enter') openWindows()">
+    <button onclick="openWindows()">3画面同時に開く</button>
+    <p>※ブロックされた場合はアドレスバー右側の通知から「許可」してください。</p>
 </div>
 
 <script>
-    function multiOpen() {
-        const input = document.getElementById('keyword').value;
-        if (!input) return;
+    function openWindows() {
+        const word = document.getElementById('word').value;
+        if (!word) return;
 
-        // URLエンコード
-        const encoded = encodeURIComponent(input);
+        const encoded = encodeURIComponent(word);
+        
+        // 画面のサイズを取得
+        const screenW = window.screen.availWidth;
+        const screenH = window.screen.availHeight;
+        
+        // 1つあたりのウィンドウ幅（3分割）
+        const winW = Math.floor(screenW / 3);
+        const winH = screenH;
 
-        // 各URLの作成
+        // URLリスト
         const urls = [
             `https://ejje.weblio.jp/content/${encoded}`,
             `https://eow.alc.co.jp/search?q=${encoded}`,
             `https://www.deepl.com/ja/translator#ja/en/${encoded}`
         ];
 
-        // 各URLを新しいタブで開く
-        urls.forEach(url => {
-            window.open(url, '_blank');
+        // 各ウィンドウを位置をずらして開く
+        urls.forEach((url, i) => {
+            const leftPos = i * winW;
+            window.open(
+                url, 
+                `window_${i}`, 
+                `width=${winW},height=${winH},left=${leftPos},top=0,resizable=yes,scrollbars=yes`
+            );
         });
     }
 </script>
